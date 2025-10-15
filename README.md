@@ -36,14 +36,6 @@ Client-side encoder/decoder tool with hash identification and Caesar cipher anal
 - ✅ **No Tracking** - Your data never leaves your browser
 - ✅ **Open Source** - Inspect the code yourself
 
-## 🎯 Use Cases
-
-- **Penetration Testing** - Encode payloads for WAF bypass
-- **CTF Challenges** - Quick decode for common encoding schemes
-- **Malware Analysis** - Decode obfuscated strings
-- **Web Development** - Test encoding/decoding implementations
-- **Security Research** - Hash identification and analysis
-
 ## 🚀 Usage
 
 Simply open the tool in your browser and:
