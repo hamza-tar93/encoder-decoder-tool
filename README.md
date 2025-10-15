@@ -79,6 +79,7 @@ Contributions are welcome! Feel free to:
 - Submit pull requests
 
 ## 🔗 Connect
+https://www.linkedin.com/in/hamza-tariq-93sr/
 
 If you find this tool useful, please ⭐ star the repository!
 
