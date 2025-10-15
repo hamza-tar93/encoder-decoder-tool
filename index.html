@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encoder/Decoder Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #e0e0e0;
+            font-size: 2rem;
+        }
+
+        .tool-section {
+            background: #2d2d2d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .tool-section h2 {
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #3d3d3d;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-weight: 500;
+        }
+
+        select, textarea, input {
+            width: 100%;
+            background: #1e1e1e;
+            border: 2px solid #3d3d3d;
+            border-radius: 8px;
+            padding: 12px;
+            color: #e0e0e0;
+            font-size: 14px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, textarea:focus, input:focus {
+            outline: none;
+            border-color: #d4a574;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        button {
+            background: #4d4d4d;
+            color: #e0e0e0;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        button:hover {
+            background: #5d5d5d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(77, 77, 77, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: #3d3d3d;
+            color: #e0e0e0;
+        }
+
+        button.secondary:hover {
+            background: #4d4d4d;
+        }
+
+        .result-box {
+            background: #1e1e1e;
+            border: 2px solid #3d3d3d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 60px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        .hash-result {
+            display: grid;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .hash-item {
+            background: #1e1e1e;
+            border: 2px solid #3d3d3d;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hash-type {
+            color: #b0b0b0;
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .caesar-results {
+            display: grid;
+            gap: 8px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .caesar-item {
+            background: #1e1e1e;
+            border: 2px solid #3d3d3d;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+        }
+
+        .caesar-label {
+            color: #b0b0b0;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .copy-btn {
+            background: #3d3d3d;
+            padding: 6px 12px;
+            font-size: 12px;
+            min-width: auto;
+        }
+
+        .success-msg {
+            color: #7fb069;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .tool-section {
+                padding: 15px;
+            }
+
+            .tool-section h2 {
+                font-size: 1.2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3d3d3d;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4d4d4d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Encoder/Decoder Tool</h1>
+
+        <!-- Text Transformations -->
+        <div class="tool-section">
+            <h2>Encoder / Decoder</h2>
+            <div class="input-group">
+                <label for="transformType">Transformation Type:</label>
+                <select id="transformType">
+                    <option value="url">URL Encode/Decode</option>
+                    <option value="base64">Base64 Encode/Decode</option>
+                    <option value="html">HTML Entity Encode/Decode</option>
+                    <option value="hex">ASCII Hex Encode/Decode</option>
+                    <option value="binary">Binary Encode/Decode</option>
+                    <option value="octal">Octal Encode/Decode</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="encodeDepth">Encoding Depth:</label>
+                <select id="encodeDepth">
+                    <option value="1">Single</option>
+                    <option value="2">Double</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="transformInput">Input:</label>
+                <textarea id="transformInput" placeholder="Enter text to encode or decode..."></textarea>
+            </div>
+            <div class="button-group">
+                <button onclick="encodeText()">Encode</button>
+                <button onclick="decodeText()">Decode</button>
+                <button class="secondary" onclick="copyResult('transformOutput')">Copy Result</button>
+                <button class="secondary" onclick="clearTransform()">Clear</button>
+            </div>
+            <div class="result-box" id="transformOutput">Result will appear here...</div>
+        </div>
+
+        <!-- Hash Identification -->
+        <div class="tool-section">
+            <h2>Hash Identification</h2>
+            <div class="input-group">
+                <label for="hashInput">Input Hash:</label>
+                <textarea id="hashInput" placeholder="Paste hash here for identification..."></textarea>
+            </div>
+            <div class="button-group">
+                <button onclick="identifyHash()">Identify Hash</button>
+                <button class="secondary" onclick="clearHash()">Clear</button>
+            </div>
+            <div class="hash-result" id="hashOutput"></div>
+        </div>
+
+        <!-- Caesar Cipher -->
+        <div class="tool-section">
+            <h2>ROT13 / Caesar Cipher</h2>
+            <div class="input-group">
+                <label for="caesarInput">Input Text:</label>
+                <textarea id="caesarInput" placeholder="Enter text for ROT13/Caesar cipher..."></textarea>
+            </div>
+            <div class="button-group">
+                <button onclick="applyCaesar()">Show All Rotations (ROT1-26)</button>
+                <button class="secondary" onclick="clearCaesar()">Clear</button>
+            </div>
+            <div class="caesar-results" id="caesarOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        // Text Transformation Functions
+        function encodeText() {
+            const input = document.getElementById('transformInput').value;
+            const type = document.getElementById('transformType').value;
+            const depth = parseInt(document.getElementById('encodeDepth').value);
+            let result = input;
+
+            try {
+                for (let i = 0; i < depth; i++) {
+                    switch(type) {
+                        case 'url':
+                            result = encodeURIComponent(result);
+                            break;
+                        case 'base64':
+                            result = btoa(result);
+                            break;
+                        case 'html':
+                            result = result.replace(/[\u00A0-\u9999<>\&]/g, i => '&#' + i.charCodeAt(0) + ';');
+                            break;
+                        case 'hex':
+                            result = Array.from(result).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+                            break;
+                        case 'binary':
+                            result = Array.from(result).map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+                            break;
+                        case 'octal':
+                            result = Array.from(result).map(c => c.charCodeAt(0).toString(8).padStart(3, '0')).join(' ');
+                            break;
+                    }
+                }
+                document.getElementById('transformOutput').textContent = result;
+            } catch(e) {
+                document.getElementById('transformOutput').textContent = 'Error: ' + e.message;
+            }
+        }
+
+        function decodeText() {
+            const input = document.getElementById('transformInput').value;
+            const type = document.getElementById('transformType').value;
+            const depth = parseInt(document.getElementById('encodeDepth').value);
+            let result = input;
+
+            try {
+                for (let i = 0; i < depth; i++) {
+                    switch(type) {
+                        case 'url':
+                            result = decodeURIComponent(result);
+                            break;
+                        case 'base64':
+                            result = atob(result);
+                            break;
+                        case 'html':
+                            const txt = document.createElement('textarea');
+                            txt.innerHTML = result;
+                            result = txt.value;
+                            break;
+                        case 'hex':
+                            result = result.replace(/\s/g, '');
+                            result = result.match(/.{1,2}/g).map(hex => String.fromCharCode(parseInt(hex, 16))).join('');
+                            break;
+                        case 'binary':
+                            result = result.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
+                            break;
+                        case 'octal':
+                            result = result.split(' ').map(oct => String.fromCharCode(parseInt(oct, 8))).join('');
+                            break;
+                    }
+                }
+                document.getElementById('transformOutput').textContent = result;
+            } catch(e) {
+                document.getElementById('transformOutput').textContent = 'Error: ' + e.message;
+            }
+        }
+
+        function clearTransform() {
+            document.getElementById('transformInput').value = '';
+            document.getElementById('transformOutput').textContent = 'Result will appear here...';
+        }
+
+        // Hash Identification
+        function identifyHash() {
+            const input = document.getElementById('hashInput').value.trim();
+            const output = document.getElementById('hashOutput');
+            output.innerHTML = '';
+
+            if (!input) {
+                output.innerHTML = '<div class="hash-item">Please enter a hash</div>';
+                return;
+            }
+
+            const hashPatterns = [
+                { regex: /^[a-f0-9]{32}$/i, type: 'MD5' },
+                { regex: /^[a-f0-9]{40}$/i, type: 'SHA-1' },
+                { regex: /^[a-f0-9]{56}$/i, type: 'SHA-224' },
+                { regex: /^[a-f0-9]{64}$/i, type: 'SHA-256' },
+                { regex: /^[a-f0-9]{96}$/i, type: 'SHA-384' },
+                { regex: /^[a-f0-9]{128}$/i, type: 'SHA-512' },
+                { regex: /^\$2[ayb]\$.{56}$/i, type: 'bcrypt' },
+                { regex: /^\$6\$.{86}$/, type: 'SHA-512 Crypt' },
+                { regex: /^\$5\$.{43}$/, type: 'SHA-256 Crypt' },
+                { regex: /^\$1\$.{22}$/, type: 'MD5 Crypt' },
+                { regex: /^[a-f0-9]{16}$/i, type: 'MySQL (old)' },
+                { regex: /^\*[a-f0-9]{40}$/i, type: 'MySQL5' },
+                { regex: /^{SHA}[a-zA-Z0-9+\/=]{28}$/, type: 'LDAP SHA-1' },
+                { regex: /^{SSHA}[a-zA-Z0-9+\/=]+$/, type: 'LDAP SSHA' },
+                { regex: /^[a-f0-9]{40}:[a-f0-9]{16}$/i, type: 'SHA-1 with Salt' }
+            ];
+
+            let found = false;
+            hashPatterns.forEach(pattern => {
+                if (pattern.regex.test(input)) {
+                    output.innerHTML += `<div class="hash-item"><span class="hash-type">${pattern.type}</span><span>Length: ${input.length}</span></div>`;
+                    found = true;
+                }
+            });
+
+            if (!found) {
+                output.innerHTML = `<div class="hash-item"><span class="hash-type">Unknown</span><span>Length: ${input.length} - No match found</span></div>`;
+            }
+        }
+
+        function clearHash() {
+            document.getElementById('hashInput').value = '';
+            document.getElementById('hashOutput').innerHTML = '';
+        }
+
+        // Caesar Cipher
+        function caesarRotate(str, shift) {
+            return str.replace(/[a-zA-Z]/g, char => {
+                const start = char <= 'Z' ? 65 : 97;
+                return String.fromCharCode(((char.charCodeAt(0) - start + shift) % 26) + start);
+            });
+        }
+
+        function applyCaesar() {
+            const input = document.getElementById('caesarInput').value;
+            const output = document.getElementById('caesarOutput');
+            output.innerHTML = '';
+
+            if (!input) {
+                output.innerHTML = '<div class="caesar-item">Please enter text</div>';
+                return;
+            }
+
+            for (let i = 1; i <= 26; i++) {
+                const rotated = caesarRotate(input, i);
+                const item = document.createElement('div');
+                item.className = 'caesar-item';
+                item.innerHTML = `<span class="caesar-label">ROT${i}:</span>${rotated}`;
+                output.appendChild(item);
+            }
+        }
+
+        function clearCaesar() {
+            document.getElementById('caesarInput').value = '';
+            document.getElementById('caesarOutput').innerHTML = '';
+        }
+
+        // Copy to Clipboard
+        function copyResult(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            if (text && text !== 'Result will appear here...') {
+                navigator.clipboard.writeText(text).then(() => {
+                    const btn = event.target;
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓ Copied!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
